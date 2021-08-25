@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { sendData } from '../../utils/http';
 import { useContext } from 'react';
 import AuthContext from './../../store/auth-context';
+import { useHistory } from 'react-router';
 
 const ProfileForm = () => {
+  const history = useHistory();
   const [updatedPassword, setUpdatedPassword] = useState('');
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
@@ -16,6 +18,7 @@ const ProfileForm = () => {
       password: updatedPassword,
       returnSecureToken: false,
     });
+    history.push('/');
   };
   return (
     <form onSubmit={handlePasswordUpdate} className={classes.form}>

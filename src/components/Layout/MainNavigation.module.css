@@ -28,6 +28,10 @@
   margin: 0 1rem;
 }
 
+.header li span {
+  color: white;
+}
+
 .header a {
   text-decoration: none;
   color: white;

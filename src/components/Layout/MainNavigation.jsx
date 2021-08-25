@@ -33,6 +33,9 @@ const MainNavigation = () => {
               <li>
                 <button onClick={handleLogout}>Logout</button>
               </li>
+              <li>
+                <span>Logged in as: {authCtx.loggedInEmail}</span>
+              </li>
             </>
           )}
         </ul>

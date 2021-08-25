@@ -1,10 +1,11 @@
-import axios from 'axios';
 import { useState, useContext } from 'react';
 import AuthContext from '../../store/auth-context';
 import classes from './AuthForm.module.css';
-import { apiKey } from './../../config';
+import { sendData } from './../../utils/http';
+import { useHistory } from 'react-router';
 
-const AuthForm = () => {
+const AuthForm = (props) => {
+  const history = useHistory();
   const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,34 +22,27 @@ const AuthForm = () => {
     let url;
     // prijungti esama vartotoja
     if (isLogin) {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + apiKey;
+      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
       console.log('login action');
     }
     // sukurti vartotoja
     if (!isLogin) {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + apiKey;
+      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
       console.log('sign up action');
-      console.log('sending form', {
-        email,
-        password,
-        returnSecureToken: true,
-      });
-      // galima validacija,  pvz passwordai ar sutampa ir t.t.
     }
 
-    try {
-      const response = await axios.post(url, {
-        email,
-        password,
-        returnSecureToken: true,
-      });
-
-      // sekmingo atsakymo vieta, kur ivykdom login metoda paduodant tokena
-      authCtx.login(response.data.idToken);
-    } catch (error) {
-      console.log(error.response.data.error.message);
-      alert('Error: ' + error.response.data.error.message);
+    const response = await sendData(url, {
+      email,
+      password,
+      returnSecureToken: true,
+    });
+    if (response) {
+      const token = response.data.idToken;
+      authCtx.login(token, email);
+      history.push('/');
     }
+    // sekmingo atsakymo vieta, kur ivykdom login metoda paduodant tokena
+
     setIsLoading(false);
   };
 
