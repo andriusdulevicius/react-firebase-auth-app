@@ -1,17 +1,38 @@
 import classes from './ProfileForm.module.css';
+import { useState } from 'react';
+import { sendData } from '../../utils/http';
+import { useContext } from 'react';
+import AuthContext from './../../store/auth-context';
 
 const ProfileForm = () => {
+  const [updatedPassword, setUpdatedPassword] = useState('');
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const handlePasswordUpdate = (e) => {
+    e.preventDefault();
+    if (updatedPassword.length < 6) return console.log('password is too short');
+    sendData('https://identitytoolkit.googleapis.com/v1/accounts:update?key=', {
+      idToken: token,
+      password: updatedPassword,
+      returnSecureToken: false,
+    });
+  };
   return (
-    <form className={classes.form}>
+    <form onSubmit={handlePasswordUpdate} className={classes.form}>
       <div className={classes.control}>
         <label htmlFor='new-password'>New Password</label>
-        <input type='password' id='new-password' />
+        <input
+          onChange={(e) => setUpdatedPassword(e.target.value)}
+          value={updatedPassword}
+          type='password'
+          id='new-password'
+        />
       </div>
       <div className={classes.action}>
         <button>Change Password</button>
       </div>
     </form>
   );
-}
+};
 
 export default ProfileForm;
