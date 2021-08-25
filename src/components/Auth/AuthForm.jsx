@@ -17,16 +17,15 @@ const AuthForm = () => {
   const submitHandler = async (e) => {
     setIsLoading(true);
     e.preventDefault();
-
+    let url;
     // prijungti esama vartotoja
     if (isLogin) {
+      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + apiKey;
       console.log('login action');
-      setIsLoading(false);
-      return;
     }
     // sukurti vartotoja
     if (!isLogin) {
-      const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + apiKey;
+      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + apiKey;
       console.log('sign up action');
       console.log('sending form', {
         email,
@@ -34,20 +33,20 @@ const AuthForm = () => {
         returnSecureToken: true,
       });
       // galima validacija,  pvz passwordai ar sutampa ir t.t.
-      try {
-        const response = await axios.post(url, {
-          email,
-          password,
-          returnSecureToken: true,
-        });
-        console.log({ response });
-      } catch (error) {
-        console.log(error.response.data.error.message);
-        alert('Error: ' + error.response.data.error.message);
-      }
-      setIsLoading(false);
-      return;
     }
+
+    try {
+      const response = await axios.post(url, {
+        email,
+        password,
+        returnSecureToken: true,
+      });
+      console.log({ response });
+    } catch (error) {
+      console.log(error.response.data.error.message);
+      alert('Error: ' + error.response.data.error.message);
+    }
+    setIsLoading(false);
   };
 
   return (
