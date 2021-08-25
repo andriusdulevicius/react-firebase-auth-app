@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { useState } from 'react';
-
+import { useState, useContext } from 'react';
+import AuthContext from '../../store/auth-context';
 import classes from './AuthForm.module.css';
 import { apiKey } from './../../config';
 
 const AuthForm = () => {
+  const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -41,7 +42,9 @@ const AuthForm = () => {
         password,
         returnSecureToken: true,
       });
-      console.log({ response });
+
+      // sekmingo atsakymo vieta, kur ivykdom login metoda paduodant tokena
+      authCtx.login(response.data.idToken);
     } catch (error) {
       console.log(error.response.data.error.message);
       alert('Error: ' + error.response.data.error.message);
