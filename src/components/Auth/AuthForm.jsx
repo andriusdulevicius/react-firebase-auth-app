@@ -6,6 +6,7 @@ import { apiKey } from './../../config';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,11 +15,13 @@ const AuthForm = () => {
   };
 
   const submitHandler = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
 
     // prijungti esama vartotoja
     if (isLogin) {
       console.log('login action');
+      setIsLoading(false);
       return;
     }
     // sukurti vartotoja
@@ -31,12 +34,18 @@ const AuthForm = () => {
         returnSecureToken: true,
       });
       // galima validacija,  pvz passwordai ar sutampa ir t.t.
-      const response = await axios.post(url, {
-        email,
-        password,
-        returnSecureToken: true,
-      });
-      console.log({ response });
+      try {
+        const response = await axios.post(url, {
+          email,
+          password,
+          returnSecureToken: true,
+        });
+        console.log({ response });
+      } catch (error) {
+        console.log(error.response.data.error.message);
+        alert('Error: ' + error.response.data.error.message);
+      }
+      setIsLoading(false);
       return;
     }
   };
@@ -61,7 +70,7 @@ const AuthForm = () => {
           />
         </div>
         <div className={classes.actions}>
-          <button>{isLogin ? 'Login' : 'Create Account'}</button>
+          {isLoading ? <button disabled>Loading...</button> : <button>{isLogin ? 'Login' : 'Create Account'}</button>}
           <button type='button' className={classes.toggle} onClick={switchAuthModeHandler}>
             {isLogin ? 'Create new account' : 'Login with existing account'}
           </button>
