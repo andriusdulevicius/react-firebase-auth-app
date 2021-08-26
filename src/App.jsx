@@ -1,24 +1,36 @@
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './components/Layout/Layout';
 import UserProfile from './components/Profile/UserProfile';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
+import AuthContext from './store/auth-context';
 
 function App() {
+  const { isLoggedIn } = useContext(AuthContext);
   return (
     <Layout>
       <ToastContainer />
       <Switch>
-        <Route path='/' exact>
-          <HomePage />
-        </Route>
-        <Route path='/auth'>
-          <AuthPage />
-        </Route>
-        <Route path='/profile'>
-          <UserProfile />
+        {isLoggedIn && (
+          <Route path='/' exact>
+            <HomePage />
+          </Route>
+        )}
+        {!isLoggedIn && (
+          <Route path='/auth'>
+            <AuthPage />
+          </Route>
+        )}
+        {isLoggedIn && (
+          <Route path='/profile'>
+            <UserProfile />
+          </Route>
+        )}
+        <Route path='*'>
+          <Redirect to='/auth' />
         </Route>
       </Switch>
     </Layout>

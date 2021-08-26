@@ -19,6 +19,7 @@ const ProfileForm = () => {
       returnSecureToken: true,
     });
     history.push('/');
+    return;
   };
   return (
     <form onSubmit={handlePasswordUpdate} className={classes.form}>
