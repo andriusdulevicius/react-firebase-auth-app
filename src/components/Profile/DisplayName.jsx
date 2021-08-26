@@ -16,7 +16,7 @@ const DisplayNameForm = () => {
     if (displayName.length < 5) return console.log('display name must be at least 5 chars ');
     await sendData('https://identitytoolkit.googleapis.com/v1/accounts:update?key=', {
       idToken: token,
-      displayName,
+      displayName: displayName,
       photoUrl: '',
       deleteAttribute: 'PHOTO_URL',
       returnSecureToken: true,

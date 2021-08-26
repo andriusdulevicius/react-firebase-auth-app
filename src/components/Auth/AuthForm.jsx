@@ -16,34 +16,38 @@ const AuthForm = (props) => {
     setIsLogin((prevState) => !prevState);
   };
 
-  const submitHandler = async (e) => {
-    setIsLoading(true);
-    e.preventDefault();
-    let url;
-    // prijungti esama vartotoja
-    if (isLogin) {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
-      console.log('login action');
-    }
-    // sukurti vartotoja
-    if (!isLogin) {
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
-      console.log('sign up action');
-    }
-    const data = {
-      email,
-      password,
-      returnSecureToken: true,
-    };
-    const response = await sendData(url, data);
-    if (response) {
-      const token = response.data.idToken;
-      authCtx.login(token, data);
-      history.replace('/');
-    }
-    // sekmingo atsakymo vieta, kur ivykdom login metoda paduodant tokena
+  const submitHandler = (e) => {
+    (async () => {
+      setIsLoading(true);
+      e.preventDefault();
+      let url;
+      // prijungti esama vartotoja
+      if (isLogin) {
+        url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
+        console.log('login action');
+      }
+      // sukurti vartotoja
+      if (!isLogin) {
+        url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
+        console.log('sign up action');
+      }
+      const data = {
+        email,
+        password,
+        returnSecureToken: true,
+      };
+      const response = await sendData(url, data);
 
-    setIsLoading(false);
+      if (response) {
+        authCtx.login(response.data.idToken, data);
+        setIsLoading(false);
+        history.replace('/');
+        return;
+      } else {
+        setIsLoading(false);
+        return;
+      }
+    })();
   };
 
   return (

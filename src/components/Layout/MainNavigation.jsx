@@ -34,6 +34,9 @@ const MainNavigation = () => {
                 <Link to='/profile'>Profile</Link>
               </li>
               <li>
+                <Link to='/tasks'>ToDo List</Link>
+              </li>
+              <li>
                 <button onClick={handleLogout}>Logout</button>
               </li>
               <li>

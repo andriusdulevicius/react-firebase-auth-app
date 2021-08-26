@@ -9,7 +9,8 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-  const [token, setToken] = useState('');
+  const existingToken = localStorage.getItem('token');
+  const [token, setToken] = useState(existingToken || '');
   const [loggedInData, setLoggedInData] = useState('');
 
   // const isLoggedIn = token ? true : false; taspats butu apacioje tik kitu budu..
@@ -19,10 +20,12 @@ export const AuthContextProvider = (props) => {
     setToken(token);
     setLoggedInData(data);
     console.log('loged in..');
+    localStorage.setItem('token', token);
   };
   const logoutHandler = () => {
     setLoggedInData('');
     setToken(null);
+    localStorage.removeItem('token');
   };
 
   const contextValue = { token, isLoggedIn, loggedInData, login: loginHandler, logout: logoutHandler };
