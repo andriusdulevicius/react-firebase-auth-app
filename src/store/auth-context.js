@@ -3,29 +3,29 @@ import React, { useState } from 'react';
 const AuthContext = React.createContext({
   token: '',
   isLoggedIn: false,
-  loggedInEmail: '',
-  login: (token) => {},
+  loggedInData: '',
+  login: (token, data) => {},
   logout: () => {},
 });
 
 export const AuthContextProvider = (props) => {
   const [token, setToken] = useState('');
-  const [loggedInEmail, setLoggedInEmail] = useState('');
+  const [loggedInData, setLoggedInData] = useState('');
 
   // const isLoggedIn = token ? true : false; taspats butu apacioje tik kitu budu..
   const isLoggedIn = !!token;
 
-  const loginHandler = (token, email) => {
+  const loginHandler = (token, data) => {
     setToken(token);
-    setLoggedInEmail(email);
+    setLoggedInData(data);
     console.log('loged in..');
   };
   const logoutHandler = () => {
-    setLoggedInEmail('');
+    setLoggedInData('');
     setToken(null);
   };
 
-  const contextValue = { token, isLoggedIn, loggedInEmail, login: loginHandler, logout: logoutHandler };
+  const contextValue = { token, isLoggedIn, loggedInData, login: loginHandler, logout: logoutHandler };
 
   return <AuthContext.Provider value={contextValue}>{props.children}</AuthContext.Provider>;
 };

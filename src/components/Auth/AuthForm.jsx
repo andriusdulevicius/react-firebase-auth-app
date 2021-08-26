@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import AuthContext from '../../store/auth-context';
 import classes from './AuthForm.module.css';
 import { sendData } from './../../utils/http';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 const AuthForm = (props) => {
   const history = useHistory();
@@ -30,16 +30,16 @@ const AuthForm = (props) => {
       url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
       console.log('sign up action');
     }
-
-    const response = await sendData(url, {
+    const data = {
       email,
       password,
       returnSecureToken: true,
-    });
+    };
+    const response = await sendData(url, data);
     if (response) {
       const token = response.data.idToken;
-      authCtx.login(token, email);
-      history.push('/');
+      authCtx.login(token, data);
+      history.replace('/');
     }
     // sekmingo atsakymo vieta, kur ivykdom login metoda paduodant tokena
 

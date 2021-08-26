@@ -10,13 +10,13 @@ const ProfileForm = () => {
   const [updatedPassword, setUpdatedPassword] = useState('');
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     if (updatedPassword.length < 6) return console.log('password is too short');
-    sendData('https://identitytoolkit.googleapis.com/v1/accounts:update?key=', {
+    await sendData('https://identitytoolkit.googleapis.com/v1/accounts:update?key=', {
       idToken: token,
       password: updatedPassword,
-      returnSecureToken: false,
+      returnSecureToken: true,
     });
     history.push('/');
   };
